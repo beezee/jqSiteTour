@@ -201,6 +201,9 @@
        function showTooltip(){
                //remove current tooltip
                removeTooltip();
+               if (config[step-1].navCaption) {
+                $('#tourNavCaption').html(config[step-1].navCaption)
+               } else { $('#tourNavCaption').html('');}
                
                var step_config		= config[step-1];
                var $elem			= $('.' + step_config.name);
@@ -370,7 +373,7 @@
                and also navigate through the steps
                 */
                var $tourcontrols  = '<div id="tourcontrols" class="tourcontrols">';
-               $tourcontrols += '<p>First time here?</p>';
+               $tourcontrols += '<p>First time here?</p><div style="font-size:12px;font-weight:normal;" id="tourNavCaption"></div>';
                $tourcontrols += '<span class="button" id="activatetour">Start the tour</span>';
                        if(!autoplay){
                                $tourcontrols += '<div class="nav"><span class="button" id="prevstep" style="display:none;">< Previous</span>';
