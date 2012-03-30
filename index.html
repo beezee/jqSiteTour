@@ -25,6 +25,7 @@
 					If you start the tour, you will see tooltips in each step, explaining a certain
 					part of the website.
 					</strong>
+				    <button id="customNext">Custom Next Button</button>
 				</p>
 				<div class="box left">
 					<h2 class="tour_1">Create a tour</h2>
@@ -35,6 +36,7 @@
 					<h2 class="tour_2">Mark a tour point</h2>
 					<p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p>
 					<p>The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way.</p>
+					<div id="highlight" style="background:white;">Highlight me on the third stop.</p></div>
 				</div>
 				<div class="box left">
 					<h2 class="tour_3">Let your users step through</h2>
@@ -90,7 +92,7 @@
 				"text"		: "Give a class to the points of your walkthrough",
 				"position"	: "BL",
 				"time" 		: 5000,
-				"nextButton" : 'h2.tour_1'
+				"nextButton" : '#customNext'
 			},
 			{
 				"name" 		: "tour_3",
@@ -98,6 +100,7 @@
 				"color"		: "white",
 				"text"		: "Customize the navigation buttons",
 				"position"	: "BL",
+				"highlights": '#highlight',
 				"time" 		: 5000
 			},
 			{

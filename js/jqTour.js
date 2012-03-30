@@ -34,7 +34,71 @@
        showControls();
        
        //create cache object for replacing modified settings on nextStep
-       var tourCache = {};
+       var tourCache = {},
+       
+        helper = {
+            setNext: function() {
+                tourCache.nextButton = (config[step-1].nextButton) ? config[step-1].nextButton : '';
+            },
+            
+            setHighlights: function() {
+                tourCache.highlights = (config[step-1].highlights) ? config[step-1].highlights: '';
+            },
+            
+            hasNextOrHighlights: function() {
+                return (tourCache.nextButton + tourCache.highlights) && (tourCache.nextButton + tourCache.highlights).trim != '';
+            },
+            
+            highlights: function() {
+                return $(tourCache.highlights);
+            },
+            
+            next: function() {
+                return $(tourCache.nextButton);
+            },
+            
+            nextAndHighlights: function() {
+                console.log( [tourCache.nextButton, tourCache.highlights].join(', '));
+                return $([tourCache.nextButton, tourCache.highlights].join(', '));
+            },
+            
+            cssHelper: {
+                props: [
+                    'position', 'top', 'left', 'z-index'        
+                ],
+                
+                replace: function(el) {
+                    var self = this;
+                    $.each(this.props, function(k, prop) {
+                        el.data('stz'+prop, el.css(prop));
+                        self.fixpos(el);
+                    });
+                    el.css({'position': 'absolute', 'z-index': 200});
+                },
+                
+                fixpos: function(el) {
+                    var offset = el.offset();
+                    console.log(offset);
+                    $.each(offset, function(k, v) {
+                        el.css(k, v);
+                    });
+                },
+                
+                reset: function(el) {
+                    $.each(this.props, function(key, prop) {
+                        el.css(prop, el.data('stz'+prop));
+                        el.removeData('stz'+prop);
+                    });
+                }
+            }
+        }
+        
+        $(exports).bind('resize', function() {
+            helper.nextAndHighlights().each(function() {
+                helper.cssHelper.reset($(this));
+                helper.cssHelper.replace($(this));
+            });
+        })
        
        /*
        we can restart or stop the tour,
@@ -78,11 +142,30 @@
        }
        
        function highlightAndBind() {
-           if (config[step-1].nextButton) {
-                   tourCache.cNextSelector = $(config[step-1].nextButton);
-                   var cNextButton = $(tourCache.cNextSelector);
-                   tourCache.zIndex = cNextButton.css('z-index');
+            $('#nextstep').show();
+            //clear cache from previous step, reset z-index on highlighted/bound elems, and unbind
+            if (helper.hasNextOrHighlights()) {
+                console.log(helper.hasNextOrHighlights());
+                helper.nextAndHighlights().each(function() {
+                    helper.cssHelper.reset($(this));
+                });
+                helper.nextAndHighlights().unbind('click.jqsitetour');
+            }
+        
+            //stash selectors for highlighted elems and custom next buttons in cache, and stash original z-index on elements
+            helper.setNext();
+            helper.setHighlights();
+             if (helper.hasNextOrHighlights()) {
+                   helper.nextAndHighlights().each(function() {
+                       helper.cssHelper.replace($(this));
+                   });
+                   //bind custom next buttons
+                    if (helper.next().length) {
+                        helper.next().bind('click.jqsitetour', nextStep);
+                        $('#nextstep').hide();
+                    }
                }
+               if(step == total_steps-1) $('#nextstep').hide();
        }
        
        function prevStep(){
@@ -97,6 +180,7 @@
                if(step <= 1)
                        return false;
                --step;
+               highlightAndBind();
                showTooltip();
        }
        
