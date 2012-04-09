@@ -121,6 +121,7 @@
        }
        
        function nextStep(){
+            $(window).trigger('beforeTourChange', config[step + 1]);
                if(!autoplay){
                        if(step > 0)
                                $('#prevstep').show();
@@ -137,6 +138,7 @@
                        return false;
                }
                ++step;
+               $(window).trigger('afterTourChange', config[step]);
                highlightAndBind();
                showTooltip();
        }
@@ -169,6 +171,7 @@
        }
        
        function prevStep(){
+            $(window).trigger('beforeTourChange', config[step - 1]);
                if(!autoplay){
                        if(step > 2)
                                $('#prevstep').show();
@@ -182,6 +185,7 @@
                --step;
                highlightAndBind();
                showTooltip();
+            $(window).trigger('afterTourChange', config[step]);
        }
        
        function endTour(){
